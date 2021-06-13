@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "npm run migrate && node ./bin/www",
+    "start": "node ./bin/www",
     "start:dev": "nodemon ./bin/www",
     "migrate": "sequelize db:migrate",
     "lint": "eslint . && npm run prettier:check",
