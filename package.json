@@ -3,5 +3,8 @@
   "private": true,
   "dependencies": {
     "lerna": "^3.18.1"
+  },
+  "scripts": {
+    "heroku-postbuild": "lerna bootstrap"
   }
 }
