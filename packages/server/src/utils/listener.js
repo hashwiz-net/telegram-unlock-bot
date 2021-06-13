@@ -9,7 +9,10 @@ const {
   revokeChatInviteLink
 } = require('./webhook')
 
-const provider = new ethers.providers.WebSocketProvider(process.env.WS_PROVIDER)
+const provider = new ethers.providers.InfuraProvider('rinkeby', {
+  projectId: process.env.INFURA_PROJECT_ID,
+  projectSecret: process.env.INFURA_PROJECT_SECRET,
+})
 
 const TransferEventSign = ethers.utils.id('Transfer(address,address,uint256)')
 const RenewEventSign = ethers.utils.id('RenewKeyPurchase(address,uint256)')
