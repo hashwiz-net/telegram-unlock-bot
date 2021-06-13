@@ -3,6 +3,8 @@ require('dotenv').config({})
 const express = require('express')
 const logger = require('morgan')
 
+const serveStatic = require('serve-static')
+
 const channelsRouter = require('./routes/channels')
 const webhookRouter = require('./routes/webhook')
 const usersRouter = require('./routes/users')
@@ -21,6 +23,8 @@ app.use('/api/channels', channelsRouter)
 app.use('/api/webhook', webhookRouter)
 app.use('/api/users', usersRouter)
 app.use('/api', indexRouter)
+
+app.use(serveStatic(`${__dirname}/../public`))
 
 app._postStartup = () => {
   startListener()
