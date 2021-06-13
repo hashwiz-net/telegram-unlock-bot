@@ -20,7 +20,7 @@ const Channel = ({ channel, reloadChannels }) => {
           keyExpiresAt
         )}
       </td>
-      <td>
+      <td className="flex">
         {status !== ChannelStatuses.Active ? null : (
           <Button linkButton href={inviteLink} target="_blank" rel="noreferrer noopener" className="py-1 px-3 text-sm md:min-w-0 my-0 mr-2 ml-0">Join Channel</Button>
         )}
