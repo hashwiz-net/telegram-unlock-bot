@@ -1,0 +1,4 @@
+*.log
+tailwind.css
+node_modules/*
+*.rdb
