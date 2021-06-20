@@ -5,6 +5,7 @@
     "lerna": "^3.18.1"
   },
   "scripts": {
-    "heroku-postbuild": "lerna bootstrap"
+    "build": "rm -rf server/public; lerna run build --scope webapp --stream --no-prefix; cp -r packages/webapp/public packages/server/public",
+    "heroku-postbuild": "lerna bootstrap && npm run build; echo"
   }
 }

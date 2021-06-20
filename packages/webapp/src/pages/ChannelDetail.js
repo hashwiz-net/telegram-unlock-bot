@@ -53,7 +53,7 @@ const ChannelDetail = ({ match }) => {
         <div className="flex items-center justify-center">
           {status !== ChannelStatuses.Active ? null : (
             <Button linkButton className="mx-2" href={inviteLink} target="_blank" rel="noopener noreferrer">
-              Join Channel
+              Join
             </Button>
           )}
           <PurchaseButton className="mx-2" lockAddress={channel.lockContract} afterPurchase={afterPurchase}>

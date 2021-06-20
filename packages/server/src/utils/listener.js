@@ -11,7 +11,7 @@ const {
 
 const provider = new ethers.providers.InfuraProvider('rinkeby', {
   projectId: process.env.INFURA_PROJECT_ID,
-  projectSecret: process.env.INFURA_PROJECT_SECRET,
+  projectSecret: process.env.INFURA_PROJECT_SECRET
 })
 
 const TransferEventSign = ethers.utils.id('Transfer(address,address,uint256)')

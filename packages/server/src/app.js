@@ -24,7 +24,9 @@ app.use('/api/webhook', webhookRouter)
 app.use('/api/users', usersRouter)
 app.use('/api', indexRouter)
 
-app.use(serveStatic(`${__dirname}/../public`))
+if (process.env.NODE_ENV === 'production') {
+  app.use(serveStatic(`${__dirname}/../public`))
+}
 
 app._postStartup = () => {
   startListener()

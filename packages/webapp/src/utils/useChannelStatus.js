@@ -24,7 +24,7 @@ const useChannelStatus = (channel) => {
     return {
       status: ChannelStatuses.Active,
       inviteLink: userKey.inviteLink,
-      keyExpiresAt: new Date(userKey.keyExpiresAt).toISOString()
+      keyExpiresAt: new Date(userKey.keyExpiresAt).toLocaleDateString()
     }
   }, [channel])
 

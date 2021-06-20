@@ -22,7 +22,7 @@ const Channel = ({ channel, reloadChannels }) => {
       </td>
       <td className="flex">
         {status !== ChannelStatuses.Active ? null : (
-          <Button linkButton href={inviteLink} target="_blank" rel="noreferrer noopener" className="py-1 px-3 text-sm md:min-w-0 my-0 mr-2 ml-0">Join Channel</Button>
+          <Button linkButton href={inviteLink} target="_blank" rel="noreferrer noopener" className="py-1 px-3 text-sm md:min-w-0 my-0 mr-2 ml-0">Join</Button>
         )}
         <PurchaseButton lockAddress={channel.lockContract} afterPurchase={reloadChannels}>
           {status === ChannelStatuses.Active ? 'Extend' : status === ChannelStatuses.Expired ? 'Renew' : 'Unlock'}
@@ -44,8 +44,10 @@ const Channels = () => {
   }
 
   return (
-    <div className="container">
-      <table>
+    <div className="container max-w-full overflow-x-scroll">
+      <table style={{
+        minWidth: '640px',
+      }}>
         <thead>
           <tr>
             <td>Channel</td>

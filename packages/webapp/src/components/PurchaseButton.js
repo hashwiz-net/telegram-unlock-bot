@@ -6,8 +6,12 @@ import useWeb3Wallet from '../utils/useWeb3Wallet'
 import Button from './basic/Button'
 
 const networks = {
+  1: {
+    provider: process.env.MAINNET_PROVIDER,
+    unlockAddress: '0x3d5409cce1d45233de1d4ebdee74b8e004abdd13',
+  },
   4: {
-    provider: 'https://rinkeby.infura.io/v3/86c1641a6ce84463aa05b081494336d8',
+    provider: process.env.RINKEBY_PROVIDER,
     unlockAddress: '0xd8c88be5e8eb88e38e6ff5ce186d764676012b0b',
   },
 }
@@ -27,7 +31,8 @@ const PurchaseButton = ({ className, children, lockAddress, afterPurchase }) => 
       await walletService.connect(provider, signer)
   
       await walletService.purchaseKey({
-        lockAddress
+        lockAddress,
+        referrer: '0x39d0A0C17fB254090cA7c5b254F00550eFD01716'
       })
 
       if (afterPurchase) {
