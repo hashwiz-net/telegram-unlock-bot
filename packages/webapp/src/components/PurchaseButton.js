@@ -7,11 +7,11 @@ import Button from './basic/Button'
 
 const networks = {
   1: {
-    provider: process.env.MAINNET_PROVIDER,
+    provider: process.env.HTTP_PROVIDER,
     unlockAddress: '0x3d5409cce1d45233de1d4ebdee74b8e004abdd13',
   },
   4: {
-    provider: process.env.RINKEBY_PROVIDER,
+    provider: process.env.HTTP_PROVIDER,
     unlockAddress: '0xd8c88be5e8eb88e38e6ff5ce186d764676012b0b',
   },
 }
