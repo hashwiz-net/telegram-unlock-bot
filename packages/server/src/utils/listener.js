@@ -9,7 +9,9 @@ const {
   revokeChatInviteLink
 } = require('./webhook')
 
-const provider = new ethers.providers.InfuraProvider('rinkeby', {
+const network = parseInt(process.env.NETWORK_ID || 4)
+
+const provider = new ethers.providers.InfuraProvider(network, {
   projectId: process.env.INFURA_PROJECT_ID,
   projectSecret: process.env.INFURA_PROJECT_SECRET
 })

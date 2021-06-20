@@ -15,7 +15,7 @@ import useWeb3Wallet from './utils/useWeb3Wallet'
 const Providers = () => {
   return (
     <UseWalletProvider
-      chainId={parseInt(process.env.NETWORK) || 4}
+      chainId={parseInt(process.env.NETWORK_ID) || 4}
     >
       <HashRouter>
         <App />
