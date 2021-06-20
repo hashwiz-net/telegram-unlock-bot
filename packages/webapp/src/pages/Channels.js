@@ -44,10 +44,8 @@ const Channels = () => {
   }
 
   return (
-    <div className="container max-w-full overflow-x-scroll">
-      <table style={{
-        minWidth: '640px',
-      }}>
+    <div className="container overflow-x-scroll">
+      <table>
         <thead>
           <tr>
             <td>Channel</td>

@@ -73,4 +73,10 @@
     @apply border-b;
     border-color: #e3e3e3;
   }
+  @media (max-width: 767px) {
+    .container > table {
+      min-width: 640px;
+    }
+  }
+
 }
