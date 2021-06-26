@@ -9,7 +9,8 @@
     "lint": "eslint . && npm run prettier:check",
     "prettier": "prettier --write \"src/**/*.js\" \"db/**/*.js\"",
     "prettier:check": "prettier -c \"src/**/*.js\" \"db/**/*.js\"",
-    "test": "NODE_ENV=test LOG_LEVEL=warn mocha test/*.js test/**/*.js --timeout 30000 --exit"
+    "test": "NODE_ENV=test LOG_LEVEL=warn mocha test/*.js test/**/*.js --timeout 30000 --exit",
+    "check-key-status": "node scripts/expired-key-checker.js"
   },
   "dependencies": {
     "common": "^0.1.0",
