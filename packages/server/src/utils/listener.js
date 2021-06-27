@@ -10,6 +10,9 @@ const {
 } = require('./webhook')
 
 const network = parseInt(process.env.NETWORK_ID || 4)
+const minBlockConfirmations = parseInt(
+  process.env.MIN_BLOCK_CONFIRMATIONS || 12
+)
 
 const provider = new ethers.providers.InfuraProvider(network, {
   projectId: process.env.INFURA_PROJECT_ID,
@@ -35,6 +38,24 @@ const fetchAllChannels = async () => {
       channel.get({ plain: true })
     )
   }
+}
+
+const getChannel = async (channelAddress) => {
+  const address = channelAddress.toLowerCase()
+  let channel = channelsCache.get(address)
+  if (!channel) {
+    channel = await Channel.findOne({
+      where: {
+        lockContract: address
+      }
+    })
+
+    if (channel) {
+      channelsCache.set(address, channel.get({ plain: true }))
+    }
+  }
+
+  return channel
 }
 
 const updateAddressLockStatus = async (address, channel) => {
@@ -104,53 +125,67 @@ const updateAddressLockStatus = async (address, channel) => {
   console.log(`Status updated for ${address}`)
 }
 
+const processLog = async (log) => {
+  const channel = await getChannel(log.address.toLowerCase())
+
+  if (!channel) {
+    // Skip events from unknown contracts
+    return
+  }
+
+  try {
+    const [funcSign] = log.topics
+
+    // TODO: try and do this in a queue
+    if (funcSign === RenewEventSign) {
+      // Handle renew
+      console.log('Processing RenewKeyPurchase event', log.transactionHash)
+
+      const address = `0x${log.topics[1].slice(-40)}`
+      updateAddressLockStatus(address, channel)
+    } else if (funcSign === TransferEventSign) {
+      // Handle new license
+      console.log('Processing Transfer event', log.transactionHash)
+
+      const [, address1, address2] = log.topics
+      const fromAddress = `0x${address1.slice(-40)}`
+      const toAddress = `0x${address2.slice(-40)}`
+
+      if (fromAddress !== ZeroAddress) {
+        updateAddressLockStatus(fromAddress, channel)
+      }
+
+      if (toAddress !== ZeroAddress) {
+        updateAddressLockStatus(toAddress, channel)
+      }
+    }
+  } catch (err) {
+    console.error(
+      'Failed to process log from blockchain',
+      log.transactionHash,
+      err
+    )
+  }
+}
+
 const startListener = async () => {
   console.log('Starting listener...')
 
-  provider.off(filters)
-
   await fetchAllChannels()
 
-  provider.on(filters, async (log) => {
-    const channel = channelsCache.get(log.address.toLowerCase())
+  provider.on('block', async (latestBlockNumber) => {
+    const blockNumber = latestBlockNumber - minBlockConfirmations
 
-    if (!channel) {
-      // Skip events from unknown contracts
-      return
+    const newFilters = {
+      ...filters,
+      fromBlock: blockNumber,
+      toBlock: blockNumber
     }
 
-    try {
-      const [funcSign] = log.topics
+    const logs = await provider.getLogs(newFilters)
 
-      // TODO: try and do this in a queue
-      if (funcSign === RenewEventSign) {
-        // Handle renew
-        console.log('Processing RenewKeyPurchase event', log.transactionHash)
-
-        const address = `0x${log.topics[1].slice(-40)}`
-        updateAddressLockStatus(address, channel)
-      } else if (funcSign === TransferEventSign) {
-        // Handle new license
-        console.log('Processing Transfer event', log.transactionHash)
-
-        const [, address1, address2] = log.topics
-        const fromAddress = `0x${address1.slice(-40)}`
-        const toAddress = `0x${address2.slice(-40)}`
-
-        if (fromAddress !== ZeroAddress) {
-          updateAddressLockStatus(fromAddress, channel)
-        }
-
-        if (toAddress !== ZeroAddress) {
-          updateAddressLockStatus(toAddress, channel)
-        }
-      }
-    } catch (err) {
-      console.error(
-        'Failed to process log from blockchain',
-        log.transactionHash,
-        err
-      )
+    for (const log of logs) {
+      processLog(log)
     }
   })
 
