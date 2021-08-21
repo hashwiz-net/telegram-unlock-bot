@@ -90,6 +90,9 @@ function getClientEnvironment(publicUrl) {
         // which is why it's disabled by default.
         // It is defined here so it is available in the webpackHotDevClient.
         FAST_REFRESH: process.env.FAST_REFRESH !== 'false',
+
+        INFURA_PROJECT_ID: process.env.INFURA_PROJECT_ID,
+        TELEGRAM_BOT_USERNAME: process.env.TELEGRAM_BOT_USERNAME,
       }
     );
   // Stringify all values so we can feed into webpack DefinePlugin
