@@ -9,18 +9,9 @@ const channelsRouter = require('./routes/channels')
 const webhookRouter = require('./routes/webhook')
 const usersRouter = require('./routes/users')
 const indexRouter = require('./routes/index')
-const { startListener } = require('./utils/listener')
+const { startAllListeners } = require('./utils/listener')
 
 const app = express()
-
-// if(process.env.NODE_ENV === 'production') {
-//   app.use((req, res, next) => {
-//     if (req.header('x-forwarded-proto') !== 'https')
-//       res.redirect(`https://${req.header('host')}${req.url}`)
-//     else
-//       next()
-//   })
-// }
 
 if (process.env.NODE_ENV !== 'test') {
   app.use(logger('dev'))
@@ -38,7 +29,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app._postStartup = () => {
-  startListener()
+  startAllListeners()
 }
 
 module.exports = app

@@ -9,15 +9,11 @@ const {
   revokeChatInviteLink
 } = require('./webhook')
 
-const network = parseInt(process.env.NETWORK_ID || 4)
+const networks = require('./networks')
+
 const minBlockConfirmations = parseInt(
   process.env.MIN_BLOCK_CONFIRMATIONS || 12
 )
-
-const provider = new ethers.providers.InfuraProvider(network, {
-  projectId: process.env.INFURA_PROJECT_ID,
-  projectSecret: process.env.INFURA_PROJECT_SECRET
-})
 
 const TransferEventSign = ethers.utils.id('Transfer(address,address,uint256)')
 const RenewEventSign = ethers.utils.id('RenewKeyPurchase(address,uint256)')
@@ -58,8 +54,11 @@ const getChannel = async (channelAddress) => {
   return channel
 }
 
-const updateAddressLockStatus = async (address, channel) => {
-  console.log(`Refetching status of address ${address} from blockchain...`)
+const updateAddressLockStatus = async (address, channel, network) => {
+  const { provider } = network
+  console.log(
+    `[${network.name}] Refetching status of address ${address} from blockchain...`
+  )
 
   const user = await User.findOne({
     where: {
@@ -68,7 +67,7 @@ const updateAddressLockStatus = async (address, channel) => {
   })
 
   if (!user) {
-    console.log(`Skipping unlinked address: ${address}`)
+    console.log(`[${network.name}] Skipping unlinked address: ${address}`)
     return
   }
 
@@ -125,7 +124,7 @@ const updateAddressLockStatus = async (address, channel) => {
   console.log(`Status updated for ${address}`)
 }
 
-const processLog = async (log) => {
+const processLog = async (log, network) => {
   const channel = await getChannel(log.address.toLowerCase())
 
   if (!channel) {
@@ -139,39 +138,45 @@ const processLog = async (log) => {
     // TODO: try and do this in a queue
     if (funcSign === RenewEventSign) {
       // Handle renew
-      console.log('Processing RenewKeyPurchase event', log.transactionHash)
+      console.log(
+        `[${network.name}] Processing RenewKeyPurchase event`,
+        log.transactionHash
+      )
 
       const address = `0x${log.topics[1].slice(-40)}`
-      updateAddressLockStatus(address, channel)
+      updateAddressLockStatus(address, channel, network)
     } else if (funcSign === TransferEventSign) {
       // Handle new license
-      console.log('Processing Transfer event', log.transactionHash)
+      console.log(
+        `[${network.name}] Processing Transfer event`,
+        log.transactionHash
+      )
 
       const [, address1, address2] = log.topics
       const fromAddress = `0x${address1.slice(-40)}`
       const toAddress = `0x${address2.slice(-40)}`
 
       if (fromAddress !== ZeroAddress) {
-        updateAddressLockStatus(fromAddress, channel)
+        updateAddressLockStatus(fromAddress, channel, network)
       }
 
       if (toAddress !== ZeroAddress) {
-        updateAddressLockStatus(toAddress, channel)
+        updateAddressLockStatus(toAddress, channel, network)
       }
     }
   } catch (err) {
     console.error(
-      'Failed to process log from blockchain',
+      `[${network.name}] Failed to process log from blockchain`,
       log.transactionHash,
       err
     )
   }
 }
 
-const startListener = async () => {
-  console.log('Starting listener...')
+const startListener = async (network) => {
+  console.log(`Starting listener for ${network.name} network...`)
 
-  await fetchAllChannels()
+  const { provider } = network
 
   provider.on('block', async (latestBlockNumber) => {
     const blockNumber = latestBlockNumber - minBlockConfirmations
@@ -185,13 +190,21 @@ const startListener = async () => {
     const logs = await provider.getLogs(newFilters)
 
     for (const log of logs) {
-      processLog(log)
+      processLog(log, network)
     }
   })
 
-  console.log('Listener started')
+  console.log(`Listener started for ${network.name}`)
+}
+
+const startAllListeners = async () => {
+  await fetchAllChannels()
+
+  for (const network of networks) {
+    startListener(network)
+  }
 }
 
 module.exports = {
-  startListener
+  startAllListeners
 }
