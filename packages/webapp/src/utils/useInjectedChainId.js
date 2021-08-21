@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react'
 
-import { get } from 'lodash'
-
 const useInjectedChainId = () => {
-  const [chainId, setChainId] = useState(1)
+  const [chainId, setChainId] = useState()
 
   useEffect(() => {
     const intr = setInterval(() => {
       // Note: This will not work for all chain IDs
-      const networkHex = get(window, 'web3.currentProvider.chainId', '0x1')
+      const networkHex = window.web3 ? window.web3.currentProvider.chainId : '0x'
 
       setChainId(parseInt(networkHex.slice(2)) || 1)
-    }, 1000)
+    }, 500)
 
     return () => {
       clearInterval(intr)

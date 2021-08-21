@@ -21,16 +21,16 @@ const Providers = () => {
       chainId={chainId}
     >
       <HashRouter>
-        <App />
+        <App chainId={chainId} />
       </HashRouter>
     </UseWalletProvider>
   )
 }
 
-const App = () => {
+const App = ({ chainId }) => {
   const { isConnected } = useWeb3Wallet()
 
-  if (!isConnected) {
+  if (!isConnected || !chainId) {
     return <ConnectWallet />
   }
 
