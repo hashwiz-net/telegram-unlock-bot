@@ -11,11 +11,14 @@ import Header from './components/Header'
 
 import './tailwind.css'
 import useWeb3Wallet from './utils/useWeb3Wallet'
+import useInjectedChainId from './utils/useInjectedChainId'
 
 const Providers = () => {
+  const chainId = useInjectedChainId()
+
   return (
     <UseWalletProvider
-      chainId={parseInt(process.env.NETWORK_ID) || 4}
+      chainId={chainId}
     >
       <HashRouter>
         <App />

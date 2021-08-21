@@ -28,10 +28,14 @@ const useChannelStatus = (channel) => {
     }
   }, [channel])
 
+  const { chainId } = channel
+
   return {
     status,
     inviteLink,
-    keyExpiresAt
+    keyExpiresAt,
+    chainId,
+    networkName: chainId === 4 ? 'Rinkeby' : (chainId === 1 ? 'Mainnet' : 'Unknown')
   }
 }
 

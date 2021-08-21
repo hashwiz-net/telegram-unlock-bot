@@ -9,11 +9,12 @@ import { ChannelStatuses } from '../utils/useChannelStatus'
 
 
 const Channel = ({ channel, reloadChannels }) => {
-  const { status, inviteLink, keyExpiresAt } = useChannelStatus(channel)
+  const { status, inviteLink, keyExpiresAt, networkName } = useChannelStatus(channel)
 
   return (
     <tr>
       <td>{channel.name}</td>
+      <td>{networkName}</td>
       <td>{status}</td>
       <td>
         {status !== ChannelStatuses.Active ? null : (
@@ -49,6 +50,7 @@ const Channels = () => {
         <thead>
           <tr>
             <td>Channel</td>
+            <td>Network</td>
             <td>Membership Status</td>
             <td>Expiry Date</td>
             <td>Actions</td>
