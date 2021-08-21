@@ -5,7 +5,7 @@ const { Channel, User } = require('../models')
 const { sendMessage, isAdmin, kickChatMember } = require('./webhook')
 const { bulkCheckUserPermission } = require('./user')
 
-const supportedChains = [4]
+const supportedChains = [1, 4]
 
 async function processBotCommand(message) {
   const params = /^\/setlock ([0-9]+) (.+)$/gi.exec(message.text)
