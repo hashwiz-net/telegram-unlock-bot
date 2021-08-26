@@ -120,20 +120,26 @@ async function processVerification(message) {
 }
 
 async function checkAndKickUnauthorizedNewMembers(message) {
-  const users = get(message, 'new_chat_members', [])
-  if (!users.length) {
+  const userIds = get(message, 'new_chat_members', []).map((user) => user.id)
+
+  if (get(message, 'from.id')) {
+    userIds.push(message.from.id)
+  }
+
+  if (!userIds.length) {
     return
   }
 
   const chatId = get(message, 'chat.id')
+  const messageId = message.message_id
 
-  const usersToKick = await bulkCheckUserPermission(
-    users.map((user) => user.userId),
-    chatId
-  )
+  const replyWithText = (text) => sendMessage(chatId, text, messageId)
+
+  const usersToKick = await bulkCheckUserPermission(userIds, chatId)
 
   for (const userId of usersToKick) {
     await kickChatMember(chatId, userId)
+    replyWithText(`Doesn't own an unlock key to the channel; kicked out`)
   }
 }
 

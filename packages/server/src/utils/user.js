@@ -1,7 +1,7 @@
 const { Channel, User, UserKey, Sequelize } = require('../models')
 
 // TODO: Cache/memoize the results
-async function bulkCheckUserPermission(usernames, channelId) {
+async function bulkCheckUserPermission(userIds, channelId) {
   const channel = await Channel.findOne({
     where: { channelId: String(channelId) }
   })
@@ -13,8 +13,8 @@ async function bulkCheckUserPermission(usernames, channelId) {
 
   const dbUsers = await User.findAll({
     where: {
-      username: {
-        [Sequelize.Op.in]: usernames.map((u) => String(u))
+      userId: {
+        [Sequelize.Op.in]: userIds.map((u) => String(u))
       }
     },
     include: [
@@ -36,11 +36,11 @@ async function bulkCheckUserPermission(usernames, channelId) {
 
   const usersToKick = []
 
-  for (const username of usernames) {
-    const dbEntry = dbUsers.find((user) => user.username === String(username))
+  for (const userId of userIds) {
+    const dbEntry = dbUsers.find((user) => user.userId === String(userId))
 
     if (!dbEntry || !dbEntry.walletAddress) {
-      usersToKick.push(username)
+      usersToKick.push(userId)
       continue
     }
 
@@ -51,7 +51,7 @@ async function bulkCheckUserPermission(usernames, channelId) {
 
     if (!dbEntry.walletAddress) {
       // Doesn't have a wallet linked
-      usersToKick.push(username)
+      usersToKick.push(userId)
       continue
     }
 
