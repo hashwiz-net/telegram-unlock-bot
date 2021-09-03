@@ -122,7 +122,9 @@ async function processVerification(message) {
 async function checkAndKickUnauthorizedNewMembers(message) {
   const userIds = get(message, 'new_chat_members', []).map((user) => user.id)
 
-  if (get(message, 'from.id')) {
+  const chatId = get(message, 'chat.id')
+  const senderId = get(message, 'from.id')
+  if (senderId && !(await isAdmin(chatId, senderId)) {
     userIds.push(message.from.id)
   }
 
@@ -130,7 +132,6 @@ async function checkAndKickUnauthorizedNewMembers(message) {
     return
   }
 
-  const chatId = get(message, 'chat.id')
   const messageId = message.message_id
 
   const replyWithText = (text) => sendMessage(chatId, text, messageId)
