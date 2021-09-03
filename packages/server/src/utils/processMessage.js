@@ -124,7 +124,7 @@ async function checkAndKickUnauthorizedNewMembers(message) {
 
   const chatId = get(message, 'chat.id')
   const senderId = get(message, 'from.id')
-  if (senderId && !(await isAdmin(chatId, senderId)) {
+  if (senderId && !(await isAdmin(chatId, senderId))) {
     userIds.push(message.from.id)
   }
 
