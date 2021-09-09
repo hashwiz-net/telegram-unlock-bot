@@ -55,7 +55,7 @@ async function kickChatMember(chatId, userId) {
 
 async function createChatInviteLink(chatId, expireDate) {
   const response = await fetch(
-    `${telegramBaseUrl}/createChatInviteLink?chat_id=${chatId}&expire_date=${expireDate}&member_limit=1`
+    `${telegramBaseUrl}/createChatInviteLink?chat_id=${chatId}&expire_date=${expireDate}`
   )
 
   return response.json()
