@@ -5,8 +5,7 @@ const { Channel, User, UserKey } = require('../models')
 const abis = require('common/abis-v8')
 const {
   kickChatMember,
-  createChatInviteLink,
-  revokeChatInviteLink
+  createChatInviteLink
 } = require('./webhook')
 
 const networks = require('./networks')
@@ -102,15 +101,10 @@ const updateAddressLockStatus = async (address, channel, network) => {
 
   if (userKey.keyExpiresAt <= new Date()) {
     await kickChatMember(channel.channelId, user.userId)
-    await revokeChatInviteLink(channel.channelId, userKey.inviteLink)
     await userKey.update({
       inviteLink: ''
     })
   } else {
-    if (userKey.inviteLink) {
-      await revokeChatInviteLink(channel.channelId, userKey.inviteLink)
-    }
-
     const { result } = await createChatInviteLink(
       channel.channelId,
       keyExpiresAt.getTime() / 1000
