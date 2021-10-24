@@ -11,7 +11,7 @@
 		"@testing-library/user-event": "^12.1.10",
 		"@typescript-eslint/eslint-plugin": "^4.5.0",
 		"@typescript-eslint/parser": "^4.5.0",
-		"@unlock-protocol/unlock-js": "^0.19.2",
+		"@unlock-protocol/unlock-js": "^0.20.4",
 		"@web3-react/core": "^6.1.9",
 		"@web3-react/injected-connector": "^6.0.7",
 		"antd": "^4.15.6",
