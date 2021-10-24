@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const { UserKey, User, Channel, Sequelize } = require('../src/models')
-const { kickChatMember, revokeChatInviteLink } = require('../src/utils/webhook')
+const { kickChatMember } = require('../src/utils/webhook')
 
 const go = async () => {
   const expiredKeys = await UserKey.findAll({
@@ -19,7 +19,6 @@ const go = async () => {
   for (const userKey of expiredKeys) {
     try {
       await kickChatMember(userKey.Channel.channelId, userKey.User.userId)
-      await revokeChatInviteLink(userKey.Channel.channelId, userKey.inviteLink)
       await userKey.update({
         inviteLink: ''
       })

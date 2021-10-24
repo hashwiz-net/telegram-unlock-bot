@@ -35,7 +35,7 @@ const useChannelStatus = (channel) => {
     inviteLink,
     keyExpiresAt,
     chainId,
-    networkName: chainId === 4 ? 'Rinkeby' : (chainId === 1 ? 'Mainnet' : 'Unknown')
+    networkName: chainId === 100 ? 'xDai' : (chainId === 4 ? 'Rinkeby' : (chainId === 1 ? 'Mainnet' : 'Unknown'))
   }
 }
 
