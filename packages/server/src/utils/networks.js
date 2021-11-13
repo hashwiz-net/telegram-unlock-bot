@@ -14,9 +14,7 @@ const networks = [
   {
     name: 'xDai',
     networdId: 100,
-    provider: new ethers.providers.JsonRpcProvider(
-      'https://rpc.xdaichain.com'
-    )
+    provider: new ethers.providers.JsonRpcProvider('https://rpc.xdaichain.com')
   },
   {
     name: 'Mainnet',
