@@ -3,16 +3,11 @@ const ethers = require('ethers')
 const { Channel, User, UserKey } = require('../models')
 
 const abis = require('common/abis-v8')
-const {
-  kickChatMember,
-  createChatInviteLink
-} = require('./webhook')
+const { kickChatMember, createChatInviteLink } = require('./webhook')
 
 const networks = require('./networks')
 
-const minBlockConfirmations = parseInt(
-  process.env.MIN_BLOCK_CONFIRMATIONS || 12
-)
+const minBlockConfirmations = parseInt(process.env.MIN_BLOCK_CONFIRMATIONS || 2)
 
 const TransferEventSign = ethers.utils.id('Transfer(address,address,uint256)')
 const RenewEventSign = ethers.utils.id('RenewKeyPurchase(address,uint256)')
