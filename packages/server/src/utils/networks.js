@@ -11,13 +11,13 @@ const networks = [
     networdId: 4,
     provider: new ethers.providers.InfuraProvider(4, defaultInfuraConfig)
   },
-//   {
-//     name: 'xDai',
-//     networdId: 100,
-//     provider: new ethers.providers.JsonRpcProvider(
-//       'https://rpc.xdaichain.com/'
-//     )
-//   },
+  {
+    name: 'xDai',
+    networdId: 100,
+    provider: new ethers.providers.JsonRpcProvider(
+      'https://rpc.xdaichain.com'
+    )
+  },
   {
     name: 'Mainnet',
     networdId: 1,
