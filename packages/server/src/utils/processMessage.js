@@ -141,8 +141,10 @@ async function checkAndKickUnauthorizedNewMembers(message) {
   const purchaseLink = `https://${process.env.HOST}/#/channel/${chatId}`
 
   for (const userId of usersToKick) {
-    replyWithText(`Kicking out since user doesn't own a key. Purchase a key before joining at ${purchaseLink}`)
-    await kickChatMember(chatId, userId)
+    replyWithText(`Kicking out in a few seconds since user doesn't own a key to the channel. You must purchase a key before joining at ${purchaseLink}`)
+    setTimeout(async () => {
+      await kickChatMember(chatId, userId)
+    }, 10000)
   }
 }
 
